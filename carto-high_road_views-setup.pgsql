@@ -383,6 +383,54 @@ CREATE VIEW planet_osm_line_z15plus_small AS
   ORDER BY priority DESC;
 
 
+CREATE FUNCTION high_road(scaleDenominator numeric, bbox box3d)
+  RETURNS TABLE(way geometry, highway text, railway text, kind text, is_link text, is_tunnel text, is_bridge text) AS
+$$
+BEGIN
+  CASE
+    -- z10
+    WHEN scaleDenominator <= 750000 AND scaleDenominator > 1500000 THEN
+      RETURN QUERY SELECT tbl.way, tbl.highway, tbl.railway, tbl.kind, tbl.is_link, tbl.is_tunnel, tbl.is_bridge
+      FROM planet_osm_line_z10 as tbl
+      WHERE tbl.way && bbox;
+
+    -- z11
+    WHEN scaleDenominator <= 400000 AND scaleDenominator > 750000 THEN
+      RETURN QUERY SELECT tbl.way, tbl.highway, tbl.railway, tbl.kind, tbl.is_link, tbl.is_tunnel, tbl.is_bridge
+      FROM planet_osm_line_z11 as tbl
+      WHERE tbl.way && bbox;
+
+    -- z12
+    WHEN scaleDenominator <= 200000 AND scaleDenominator > 100000 THEN
+      RETURN QUERY SELECT tbl.way, tbl.highway, tbl.railway, tbl.kind, tbl.is_link, tbl.is_tunnel, tbl.is_bridge
+      FROM planet_osm_line_z12 as tbl
+      WHERE tbl.way && bbox;
+
+    -- z13
+    WHEN scaleDenominator <= 100000 AND scaleDenominator > 50000 THEN
+      RETURN QUERY SELECT tbl.way, tbl.highway, tbl.railway, tbl.kind, tbl.is_link, tbl.is_tunnel, tbl.is_bridge
+      FROM planet_osm_line_z13 as tbl
+      WHERE tbl.way && bbox;
+
+    -- z14
+    WHEN scaleDenominator <= 50000 AND scaleDenominator > 25000 THEN
+      RETURN QUERY SELECT tbl.way, tbl.highway, tbl.railway, tbl.kind, tbl.is_link, tbl.is_tunnel, tbl.is_bridge
+      FROM planet_osm_line_z14 as tbl
+      WHERE tbl.way && bbox;
+
+    -- z15+
+    WHEN scaleDenominator <= 25000 THEN
+      RETURN QUERY SELECT tbl.way, tbl.highway, tbl.railway, tbl.kind, tbl.is_link, tbl.is_tunnel, tbl.is_bridge
+      FROM planet_osm_line_z15plus as tbl
+      WHERE tbl.way && bbox;
+
+    ELSE
+      NULL;
+   END CASE;
+END
+$$
+LANGUAGE 'plpgsql';
+
 
 INSERT INTO geometry_columns
 (f_table_catalog, f_table_schema, f_table_name, f_geometry_column, coord_dimension, srid, "type")
