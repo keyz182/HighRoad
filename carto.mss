@@ -1,5 +1,21 @@
-Map {
-  background-color: #666;
+Map
+{
+  background-color: #eee;
+}
+
+#water-bodies
+{
+  polygon-fill: #eee;
+}
+
+#land
+{
+  polygon-fill: #666;
+}
+
+#buildings[zoom>=13]
+{
+  polygon-fill: #333;
 }
 
 /*//////// Base line styles */
