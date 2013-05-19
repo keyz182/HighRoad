@@ -592,7 +592,7 @@ Map
     line-dasharray: 2,3;
   }
 
-  [zoom=17]
+  [zoom>=17]
   {
     line-width: 2;
     line-dasharray: 4,6;
