@@ -1,6 +1,6 @@
 -- High Road
 --
--- This file is a collection of Postgres views that make rendering roads from
+-- This file is a collection of Postgres TABLEs that make rendering roads from
 -- OpenStreetMap data easier and better-looking. They are broken up by zoom
 -- level, corresponding to numbered levels in the traditional web-map spherical
 -- mercator projects. Zoom 0 is the entire planet, zoom 10 is where the street
@@ -22,11 +22,11 @@
 -- 
 -- High Road can be applied to an existing OpenStreetMap rendering database
 -- created with osm2pgsql (http://wiki.openstreetmap.org/wiki/Osm2pgsql). Using
--- the command-line psql utility, you can add High Road views like this:
+-- the command-line psql utility, you can add High Road tables like this:
 -- 
---     psql -U username -f high_roads_views-setup.pgsql databasename
+--     psql -U username -f high_roads_tables-setup.pgsql databasename
 -- 
--- The views here assume that you've created your database using the default
+-- The tables here assume that you've created your database using the default
 -- settings of osm2pgsql, including the prefix of "planet_osm". If you've chosen
 -- a different prefix, you should find every instance of "planet_osm" in the
 -- script below and replace is with your chosen prefix.
@@ -38,11 +38,11 @@
 --
 -- NOTE: To upgrade your OSM planet, it will need to be removed, then setup again.
 --
---- Using the command-line psql utility, you can remove High Road views like this:
+--- Using the command-line psql utility, you can remove High Road tables like this:
 -- 
---     psql -U username -f high_road_views-remove.pgsql databasename
+--     psql -U username -f high_road_tables-remove.pgsql databasename
 -- 
--- The views here assume that you've created your database using the default
+-- The tables here assume that you've created your database using the default
 -- settings of osm2pgsql, including the prefix of "planet_osm". If you've chosen
 -- a different prefix, you should find every instance of "planet_osm" in the
 -- script below and replace is with your chosen prefix.
@@ -88,14 +88,14 @@
 
 BEGIN;
 
-DROP VIEW IF EXISTS planet_osm_line_z15plus_big;
-DROP VIEW IF EXISTS planet_osm_line_z15plus_small;
-DROP VIEW IF EXISTS planet_osm_line_z15plus;
-DROP VIEW IF EXISTS planet_osm_line_z14;
-DROP VIEW IF EXISTS planet_osm_line_z13;
-DROP VIEW IF EXISTS planet_osm_line_z12;
-DROP VIEW IF EXISTS planet_osm_line_z11;
-DROP VIEW IF EXISTS planet_osm_line_z10;
+DROP TABLE IF EXISTS planet_osm_line_z15plus_big;
+DROP TABLE IF EXISTS planet_osm_line_z15plus_small;
+DROP TABLE IF EXISTS planet_osm_line_z15plus;
+DROP TABLE IF EXISTS planet_osm_line_z14;
+DROP TABLE IF EXISTS planet_osm_line_z13;
+DROP TABLE IF EXISTS planet_osm_line_z12;
+DROP TABLE IF EXISTS planet_osm_line_z11;
+DROP TABLE IF EXISTS planet_osm_line_z10;
 
 DELETE FROM geometry_columns
 WHERE f_table_name
@@ -105,7 +105,7 @@ WHERE f_table_name
 
 
 
-CREATE VIEW planet_osm_line_z10 AS
+CREATE TABLE planet_osm_line_z10 AS
   SELECT way,
          highway,
          railway,
@@ -138,7 +138,7 @@ ORDER BY priority DESC;
 
 
 
-CREATE VIEW planet_osm_line_z11 AS
+CREATE TABLE planet_osm_line_z11 AS
   SELECT way,
          highway,
          railway,
@@ -171,7 +171,7 @@ ORDER BY priority DESC;
 
 
 
-CREATE VIEW planet_osm_line_z12 AS
+CREATE TABLE planet_osm_line_z12 AS
   SELECT way,
          highway,
          railway,
@@ -210,7 +210,7 @@ ORDER BY priority DESC;
 
 
 
-CREATE VIEW planet_osm_line_z13 AS
+CREATE TABLE planet_osm_line_z13 AS
   SELECT way,
          highway,
          railway,
@@ -250,7 +250,7 @@ ORDER BY priority DESC;
 
 
 
-CREATE VIEW planet_osm_line_z14 AS
+CREATE TABLE planet_osm_line_z14 AS
   SELECT way,
          highway,
          railway,
@@ -306,7 +306,7 @@ ORDER BY grouping DESC, explicit_layer ASC, priority DESC;
 
 
 
-CREATE VIEW planet_osm_line_z15plus AS
+CREATE TABLE planet_osm_line_z15plus AS
   SELECT way,
          highway,
          railway,
@@ -366,7 +366,7 @@ ORDER BY explicit_layer ASC, implied_layer ASC, priority DESC;
 
 
 
-CREATE VIEW planet_osm_line_z15plus_big AS
+CREATE TABLE planet_osm_line_z15plus_big AS
   SELECT *
   FROM planet_osm_line_z15plus
   WHERE highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'primary_link')
@@ -375,7 +375,7 @@ CREATE VIEW planet_osm_line_z15plus_big AS
 
 
 
-CREATE VIEW planet_osm_line_z15plus_small AS
+CREATE TABLE planet_osm_line_z15plus_small AS
   SELECT *
   FROM planet_osm_line_z15plus
   WHERE highway IN ('residential', 'unclassified', 'road', 'unclassified', 'service', 'minor')
